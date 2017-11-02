@@ -72,7 +72,7 @@ public class TripServiceTest {
 
     @Test
     public void should_return_trips_when_users_are_friends() {
-        
+
         User friend = new User();
         friend.addFriend(loggedInUser);
         friend.addTrip(TO_FRANCE);
