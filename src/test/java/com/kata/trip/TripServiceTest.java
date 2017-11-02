@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static com.kata.trip.UserBuilder.aUser;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -29,7 +30,17 @@ import static org.junit.Assert.assertThat;
  *    the list of all trips for the friend. That branch has a dependency with a DAO. We apply
  *    here a second extract method and override it in our test class.
  *
- * Then do a little clean up in the test class by removing duplicates
+ * Then do a little clean up in the test class by removing duplicates.
+ *
+ * Introduce a BuilderPattern for Friends and Trips.
+ *
+ * Tip: Write the code the way you want to read it and implement methods from there.
+ *
+ * Tip: There is always only three numbers in programming: 0, One or Many. Use varargs arbitrary
+ * parameters - eg. method(Type... arg) - to pass an array of parameters.
+ *
+ * Tip: Always good practice to combine method name with parameter - eg. addTripsTo(user) or
+ * addFriendsTo(user). It always makes it better to read and avoid duplications in names.
  */
 public class TripServiceTest {
 
@@ -61,9 +72,11 @@ public class TripServiceTest {
     @Test
     public void should_not_return_trips_when_users_are_not_friends() {
 
-        User friend = new User();
-        friend.addFriend(ANOTHER_USER);
-        friend.addTrip(TO_FRANCE);
+        User friend = aUser()
+                .friendsWith(ANOTHER_USER)
+                .withTrips(TO_FRANCE)
+                .build();
+
         List<Trip> friendTrips = tripService.getTripsByUser(friend);
 
         assertThat(friendTrips.size(), is(0));
@@ -73,16 +86,21 @@ public class TripServiceTest {
     @Test
     public void should_return_trips_when_users_are_friends() {
 
-        User friend = new User();
-        friend.addFriend(loggedInUser);
-        friend.addTrip(TO_FRANCE);
-        friend.addTrip(TO_LONDON);
+        User friend = aUser()
+                .friendsWith(loggedInUser, ANOTHER_USER)
+                .withTrips(TO_FRANCE, TO_LONDON)
+                .build();
+
         List<Trip> friendTrips = tripService.getTripsByUser(friend);
 
         assertThat(friendTrips.size(), is(2));
 
     }
 
+    /*
+     * This class overrides dependencies within service class so the
+     * class can be tested independently
+     */
     private class TestableTripService extends TripService {
 
         @Override
@@ -95,4 +113,5 @@ public class TripServiceTest {
             return loggedInUser;
         }
     }
+
 }
