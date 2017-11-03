@@ -21,9 +21,7 @@ public class TripService {
 		User loggedInUser = getLoggedInUser();
 
 		if (loggedInUser != null) {
-			boolean isFriend = false;
-			isFriend = user.isFriendWith(loggedInUser);
-			if (isFriend) {
+			if (user.isFriendWith(loggedInUser)) {
 				tripList = getTripsBy(user);
 			}
 			return tripList;
