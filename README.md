@@ -47,3 +47,24 @@ Imagine a social networking website for travellers
  When refactoring, unlike when writing unit tests, start with the deepest branch. In real 
  legacy code, there are lots of dependencies and variables. Normally, the deepest branch 
  has all the data prepared before hence it makes it easier to start with.
+ 
+ Look for feature envy:
+ The TripService class is iterating through the user collection to retrieve friends in order
+ to get the trips. Instead of searching for friend itself, the TripService class
+ should ask the User : User, are you friend with this user ?
+ 
+ Add a UserTest class.
+ 
+ Tips : Start writing negative test form as it is usually simpler to implement.
+ 
+ Start with an assertion that calls the method the way it is intended to be called:
+ user.isFriendWith(User aUser)
+ 
+ Tips: When refactoring, stay in the green for as long as possible. Do small steps and allow 
+ yourself to do ctrl+z or git reset hard to get back to green
+ 
+ Tip: in legacy code, variable can be declared all over the place. Try to bring them together 
+ where it is used.
+ 
+ Tip: some namings may be wrong, try to rename as soon as you figure out what they are. 
+ i.e. LoggedUser -> LoggedInUser
