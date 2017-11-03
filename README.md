@@ -68,3 +68,6 @@ Imagine a social networking website for travellers
  
  Tip: some namings may be wrong, try to rename as soon as you figure out what they are. 
  i.e. LoggedUser -> LoggedInUser
+ 
+ Tip: Try to get rid of the variables when refactoring. The less variables there is, the easier
+ it is to refactor.
