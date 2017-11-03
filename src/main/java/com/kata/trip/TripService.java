@@ -17,17 +17,18 @@ import com.kata.user.UserSession;
 public class TripService {
 
 	public List<Trip> getTripsByUser(User user) throws UserNotLoggedInException {
-		List<Trip> tripList = new ArrayList<Trip>();
-		User loggedInUser = getLoggedInUser();
 
-		if (loggedInUser != null) {
-			if (user.isFriendWith(loggedInUser)) {
-				tripList = getTripsBy(user);
-			}
-			return tripList;
-		} else {
+		User loggedInUser = getLoggedInUser();
+		if (loggedInUser == null) {
 			throw new UserNotLoggedInException();
 		}
+
+		List<Trip> tripList = new ArrayList<Trip>();
+		if (user.isFriendWith(loggedInUser)) {
+			tripList = getTripsBy(user);
+		}
+
+		return tripList;
 	}
 
 	protected List<Trip> getTripsBy(User user) {
