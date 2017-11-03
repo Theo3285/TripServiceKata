@@ -28,4 +28,22 @@ Imagine a social networking website for travellers
     the list of all trips for the friend. That branch has a dependency with a DAO. We apply
     here a second extract method and override it in our test class.
 
+ ## Clean Test Class
+ 
  Then do a little clean up in the test class by removing duplicates
+ 
+ Introduce a BuilderPattern for Friends and Trips.
+ 
+ Tip: Write the code the way you want to read it and implement methods from there.
+ 
+ Tip: There is always only three numbers in programming: 0, One or Many. Use varargs arbitrary
+ parameters - eg. method(Type... arg) - to pass an array of parameters.
+ 
+ Tip: Always good practice to combine method name with parameter - eg. addTripsTo(user) or
+ addFriendsTo(user). It always makes it better to read and avoid duplications in names.
+ 
+ ## Refactoring
+ 
+ When refactoring, unlike when writing unit tests, start with the deepest branch. In real 
+ legacy code, there are lots of dependencies and variables. Normally, the deepest branch 
+ has all the data prepared before hence it makes it easier to start with.
