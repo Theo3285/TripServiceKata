@@ -13,10 +13,16 @@ import com.kata.user.UserSession;
  * The class is iterating through the user collection to retrieve friends in order
  * to get the trips. Instead of searching for friend itself, the TripService class
  * should ask the User : User, are you friend with this user ?
+ *
+ * Design Problem: The service has a dependency with the User session and is
+ * responsible for getting the logged-in user. It is better to pass the logged-in user
+ * as parameter to the service and change the getTripByUser method signature. When
+ * doing so, all the client classes will need to change their method call so be carrefull
+ * when refactoring real legacy production code.
  */
 public class TripService {
 
-	public List<Trip> getTripsByUser(User user) throws UserNotLoggedInException {
+	public List<Trip> getTripsByUser(User user, User loggedInUser) throws UserNotLoggedInException {
 
 		if (getLoggedInUser() == null) {
 			throw new UserNotLoggedInException();
