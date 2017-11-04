@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.kata.exception.UserNotLoggedInException;
 import com.kata.user.User;
-import com.kata.user.UserSession;
 
 /**
  * Refactoring : Start with the deepest branch. Look for feature envy.
@@ -17,18 +16,18 @@ import com.kata.user.UserSession;
  * Design Problem: The service has a dependency with the User session and is
  * responsible for getting the logged-in user. It is better to pass the logged-in user
  * as parameter to the service and change the getTripByUser method signature. When
- * doing so, all the client classes will need to change their method call so be carrefull
+ * doing so, all the client classes will need to change their method call so be careful
  * when refactoring real legacy production code.
  */
 public class TripService {
 
 	public List<Trip> getTripsByUser(User user, User loggedInUser) throws UserNotLoggedInException {
 
-		if (getLoggedInUser() == null) {
+		if (loggedInUser == null) {
 			throw new UserNotLoggedInException();
 		}
 
-		return (user.isFriendWith(getLoggedInUser()))
+		return (user.isFriendWith(loggedInUser))
 				? getTripsBy(user)
 				: noTrips();
 
@@ -42,10 +41,4 @@ public class TripService {
 
 		return TripDAO.findTripsByUser(user);
 	}
-
-	protected User getLoggedInUser() {
-
-		return UserSession.getInstance().getLoggedUser();
-	}
-
 }

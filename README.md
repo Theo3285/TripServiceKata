@@ -71,3 +71,16 @@ Imagine a social networking website for travellers
  
  Tip: Try to get rid of the variables when refactoring. The less variables there is, the easier
  it is to refactor.
+ 
+ ## Design Problem
+ 
+ Design Problem: The service has a dependency with the User session and is
+ responsible for getting the logged-in user. It is better to pass the logged-in user
+ as parameter to the service and change the getTripByUser method signature. When
+ doing so, all the client classes will need to change their method call so be careful
+ when refactoring real legacy production code.
+ 
+ Once done, remove the getLoggedInUser() method calls and use the parameter instead.
+ In the TripServiceTest class, do the same in the TestableTripService extension and replace
+ the loggedInUser variable with the Constants. Finally, remove the getLoggedInUser() methods
+ from both the TripService class and extension.
