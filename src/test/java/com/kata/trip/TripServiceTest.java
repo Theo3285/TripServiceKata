@@ -3,8 +3,12 @@ package com.kata.trip;
 import com.kata.exception.UserNotLoggedInException;
 import com.kata.user.User;
 
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.mockito.runners.MockitoJUnitRunner;
 
 
 import java.util.List;
@@ -12,6 +16,7 @@ import java.util.List;
 import static com.kata.trip.UserBuilder.aUser;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.BDDMockito.given;
 
 /**
  * Start writing unit test for the shortest branch first and then the next deepest branch.
@@ -42,6 +47,8 @@ import static org.junit.Assert.assertThat;
  * Tip: Always good practice to combine method name with parameter - eg. addTripsTo(user) or
  * addFriendsTo(user). It always makes it better to read and avoid duplications in names.
  */
+
+@RunWith(MockitoJUnitRunner.class)
 public class TripServiceTest {
 
     private static final User GUEST = null; //introduce domain language
@@ -51,18 +58,17 @@ public class TripServiceTest {
     private static final Trip TO_FRANCE = new Trip();
     private static final Trip TO_LONDON = new Trip();
 
-    private TripService tripService;
+    @Mock
+    private TripDAO tripDAO;
 
-    @Before
-    public void setUp() {
-
-        tripService = new TestableTripService();
-    }
+    @InjectMocks
+    @Spy
+    private TripService tripService = new TripService();
 
     @Test (expected = UserNotLoggedInException.class)
     public void should_throw_an_exception_when_user_is_not_logged_in() {
 
-        tripService.getTripsByUser(UNUSED_USER, GUEST);
+        tripService.getFriendTrips(UNUSED_USER, GUEST);
 
     }
 
@@ -74,7 +80,7 @@ public class TripServiceTest {
                 .withTrips(TO_FRANCE)
                 .build();
 
-        List<Trip> friendTrips = tripService.getTripsByUser(friend, REGISTERED_USER);
+        List<Trip> friendTrips = tripService.getFriendTrips(friend, REGISTERED_USER);
 
         assertThat(friendTrips.size(), is(0));
 
@@ -88,23 +94,11 @@ public class TripServiceTest {
                 .withTrips(TO_FRANCE, TO_LONDON)
                 .build();
 
-        List<Trip> friendTrips = tripService.getTripsByUser(friend, REGISTERED_USER);
+        given(tripDAO.tripsBy(friend)).willReturn(friend.trips());
+
+        List<Trip> friendTrips = tripService.getFriendTrips(friend, REGISTERED_USER);
 
         assertThat(friendTrips.size(), is(2));
 
     }
-
-    /*
-     * This class overrides dependencies within service class so the
-     * class can be tested independently
-     */
-    private class TestableTripService extends TripService {
-
-        @Override
-        protected List<Trip> getTripsBy(User user) {
-            return user.trips();
-        }
-
-     }
-
 }
